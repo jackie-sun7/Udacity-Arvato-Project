@@ -10,6 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from xgboost.sklearn import XGBClassifier
 
 def clean_data(df_raw):
     
@@ -70,29 +71,6 @@ def clean_data(df_raw):
     return df
 
 
-class ClfSwitcher(BaseEstimator):
-    """
-    Switch Classifier in pipeline
-    """
-    
-    def __init__(self, estimator = RandomForestClassifier()):   
-        self.estimator = estimator
-
-    def fit(self, X, y=None, **kwargs):
-        self.estimator.fit(X, y)
-        return self
-
-    def predict(self, X, y=None):
-        return self.estimator.predict(X)
-
-    def predict_proba(self, X):
-        return self.estimator.predict_proba(X)
-    
-    def feature_importances_(self):
-        return self.estimator.feature_importances_
-  
-    def score(self, X, y):
-        return self.estimator.score(X, y)
         
 def build_model():
 
@@ -100,21 +78,19 @@ def build_model():
     pipeline = Pipeline([
         ('scaler', StandardScaler()),
         ('pca', PCA(n_components=100)),
-        ('clf', ClfSwitcher())
+        ('clf', XGBClassifier())
     ])
     
 
-    parameters = [
-          {
-          'clf__estimator': [GradientBoostingClassifier()],
-          'clf__estimator__n_estimators': [50, 100, 200]
-          },
-          {
-          'clf__estimator': [RandomForestClassifier()],
-          'clf__estimator__n_estimators': [50, 100, 200]
-          }
-        ]
+    parameters = {
+        'clf__gamma': [0.7], #[i/10 for i in range(0,10)],
+        'clf__max_depth': [i for i in range(3,7)],
+        'clf__min_child_weight': [i for i in range(1,5)],
+        'clf__subsample': [i/10 for i in range(7,11)],
+        'clf__colsample': [i/10 for i in range(7,11)]
+    }
+        
     
-    cv = GridSearchCV(pipeline, param_grid=parameters)
+    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=1, n_jobs=-1, scoring='roc_auc')
     
     return cv
