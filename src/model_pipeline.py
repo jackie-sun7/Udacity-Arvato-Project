@@ -13,6 +13,13 @@ from sklearn.ensemble import GradientBoostingClassifier
 from xgboost.sklearn import XGBClassifier
 
 def clean_data(df_raw):
+    """Handel mixed type and fill missing value for raw dataset
+    
+    Args:
+        df_raw=pd.DataFrame(), Raw dataset of Arvato
+    Returns:
+        df=pd.DataFrame(), cleaned dataset
+    """
     
     df = df_raw.copy()
     # Map categorical value(1A,1B,2A, etc.) to numerical value
@@ -73,7 +80,11 @@ def clean_data(df_raw):
 
         
 def build_model():
-
+    """GridSearchCV for XGBoost hyper-parameter tunning
+    
+    Returns:
+        cv: model with best estimator 
+    """
     
     pipeline = Pipeline([
         ('scaler', StandardScaler()),
