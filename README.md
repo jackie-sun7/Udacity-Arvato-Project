@@ -6,6 +6,9 @@ Arvato Financial Solutions is a Germany-based company providing B2B financial Se
 > 1.   Help the company identify the customer segment by unsupervised learning;
 > 2.   Improve marketing efficiency by supervised learning models.
 
+### Motivation
+Mailing are one of the most comment marketing strategy. The marketing department send out hundreds of mails every single day, but every mail has its cost. Therefore, mail the right people will increase the response rate and help the company decrease the marking expense. To find the 'right people', we explore the dataset from Arvato Financial Solutions to answer two questions below.
+
 ## Problem Statement
 
 ### Customer segment report
